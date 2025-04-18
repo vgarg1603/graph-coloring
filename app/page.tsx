@@ -1,103 +1,71 @@
-import Image from "next/image";
+import CodeTabContent from "@/components/CodeTabContent";
+import Navbar from "@/components/Navbar";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import VisualizeGraphColoring from "@/components/VisualizeGraphColoring";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+
+
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="bg-blue-950 p-2 text-white">
+      <h1 className="text-center text-2xl md:text-5xl text-white p-5 font-semibold hover:text-neutral-300 hover:cursor-cell">Graph Coloring Simulator</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <Card className="my-1.5 p-10 bg-foreground text-white m-3 border-0 ">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">Graph Coloring</CardTitle>
+          <CardDescription>Assign colors to vertices of a graph such that no two adjacent vertices have the same color</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <Tabs defaultValue="explanation" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 	bg-gradient-to-r from-[#2c2f33] via-[#3a3f44] to-[#2c2f33] rounded-md text-muted-foreground py-1 px-2">
+              <TabsTrigger value="explanation" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-colors p-3">Explanation</TabsTrigger>
+              <TabsTrigger value="code" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-colors p-3">Code</TabsTrigger>
+              <TabsTrigger value="simulation" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white transition-colors rounded-md p-3">Simulation</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="explanation">
+              <div className="my-2 p-6 border-gray-500 border">
+                <h1 className="text-2xl font-bold mb-4 ">Algorithm</h1>
+                <ol className="list-decimal list-inside space-y-2 ">
+                  <li>Start with the first vertex of the graph.</li>
+                  <li>Assign the first available color to the vertex that does not violate the coloring constraints (no two adjacent vertices can have the same color).</li>
+                  <li>Move to the next vertex and repeat the process of assigning the first available color.</li>
+                  <li>If all vertices are successfully colored, the algorithm terminates successfully.</li>
+                  <li>If a vertex cannot be assigned any color without violating the constraints, backtrack to the previous vertex and try a different color.</li>
+                  <li>Continue this process until all vertices are colored or it is determined that the graph cannot be colored with the given number of colors.</li>
+                </ol>
+
+                <h2 className="text-xl font-bold mt-6 mb-4">Time Complexity</h2>
+                <p>The time complexity of the backtracking algorithm for graph coloring is O(m^V), where V is the number of vertices and m is the number of colors. This is because, in the worst case, the algorithm tries all possible color combinations for all vertices.</p>
+
+                <h2 className="text-xl font-bold mt-6 mb-4">Advantages</h2>
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Provides an exact solution to the graph coloring problem.</li>
+                  <li>Can be used for small graphs where an optimal solution is required.</li>
+                  <li>Flexible and can be adapted to different constraints and requirements.</li>
+                </ul>
+
+                <h2 className="text-xl font-bold mt-6 mb-4">Disadvantages</h2>
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Highly inefficient for large graphs due to its exponential time complexity.</li>
+                  <li>Not suitable for real-time applications or scenarios with strict time constraints.</li>
+                  <li>Requires significant computational resources for graphs with a large number of vertices or colors.</li>
+                </ul>
+              </div>
+            </TabsContent>
+            <TabsContent value="code">
+              <CodeTabContent />
+            </TabsContent>
+            <TabsContent value="simulation">
+              <div className="my-2 p-2.5 border-gray-500 border mx-auto">
+                <VisualizeGraphColoring />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 }
