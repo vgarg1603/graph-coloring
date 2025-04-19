@@ -25,7 +25,7 @@ export default function Home() {
             </TabsList>
 
             <TabsContent value="explanation">
-              <div className="my-2 p-6 border-gray-500 border">
+              <div className="my-2 p-6 border-gray-500 border rounded-lg">
                 <h1 className="text-2xl font-bold mb-4 ">Algorithm</h1>
                 <ol className="list-decimal list-inside space-y-2 ">
                   <li>Start with the first vertex of the graph.</li>
@@ -58,7 +58,7 @@ export default function Home() {
               <CodeTabContent />
             </TabsContent>
             <TabsContent value="simulation">
-              <div className="my-2 p-2.5 border-gray-500 border mx-auto">
+              <div className="my-2 p-2.5 border-gray-500 border mx-auto rounded-lg">
                 <VisualizeGraphColoring />
               </div>
             </TabsContent>
