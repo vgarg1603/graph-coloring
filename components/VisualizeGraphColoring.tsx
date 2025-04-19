@@ -4,7 +4,13 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
 interface Node {
@@ -47,7 +53,8 @@ export default function VisualizeBacktrackingGraphColoring() {
 
         const isSafe = (nodeIndex: number, color: number): boolean => {
             for (const edge of edges) {
-                const neighbor = edge.from === nodeIndex ? edge.to : edge.to === nodeIndex ? edge.from : null;
+                const neighbor =
+                    edge.from === nodeIndex ? edge.to : edge.to === nodeIndex ? edge.from : null;
                 if (neighbor !== null && nodeColors[neighbor] === color) return false;
             }
             return true;
@@ -152,14 +159,29 @@ export default function VisualizeBacktrackingGraphColoring() {
 
         if (e.shiftKey) {
             const newNodes = nodes.filter((n) => n.id !== id);
-            const newEdges = edges.filter((e) => e.from !== id && e.to !== id);
-            const newColors = colors.filter((_, i) => i !== id);
-            setNodes(newNodes);
+
+            // Create ID remapping map
+            const idMap = new Map<number, number>();
+            newNodes.forEach((n, i) => idMap.set(n.id, i));
+
+            const reindexedNodes = newNodes.map((n, i) => ({ ...n, id: i }));
+
+            const newEdges = edges
+                .filter((e) => e.from !== id && e.to !== id)
+                .map((e) => ({
+                    from: idMap.get(e.from)!,
+                    to: idMap.get(e.to)!,
+                }));
+
+            const newColors = reindexedNodes.map(() => -1);
+
+            setNodes(reindexedNodes);
             setEdges(newEdges);
             setColors(newColors);
             setSteps([]);
             setStepIndex(0);
             setIsPlaying(false);
+            setSelectedNode(null);
             return;
         }
 
@@ -213,27 +235,42 @@ export default function VisualizeBacktrackingGraphColoring() {
 
     return (
         <div className="max-w-6xl w-full mx-auto py-6 px-4 flex flex-col gap-6">
+            {/* Card for Controls */}
             <Card className="bg-gradient-to-b from-[#1e1e1e] to-[#2a2a2a]">
-                <CardContent className="py-4 flex flex-wrap items-center gap-4 ">
-                    <Button onClick={handlePlay} disabled={!nodes.length || isPlaying}>▶️ Play</Button>
-                    <Button variant="secondary" onClick={handleReset}>🔄 Reset</Button>
-                    <Button variant="outline" onClick={handleGenerateRandom}>🎲 Random Graph</Button>
-                    <div className="flex items-center gap-2 bg-white rounded-lg pl-1">
+                <CardContent className="py-4 flex flex-col sm:flex-row sm:items-center sm:gap-4 gap-6">
+                    {/* Play, Reset, Random Graph Buttons */}
+                    <Button onClick={handlePlay} disabled={!nodes.length || isPlaying} className="w-full sm:w-auto">
+                        ▶️ Play
+                    </Button>
+                    <Button variant="secondary" onClick={handleReset} className="w-full sm:w-auto">
+                        🔄 Reset
+                    </Button>
+                    <Button variant="outline" onClick={handleGenerateRandom} className="w-full sm:w-auto">
+                        🎲 Random Graph
+                    </Button>
+
+                    {/* Max Colors Selector */}
+                    <div className="flex items-center gap-2 bg-white rounded-lg pl-1 w-full sm:w-auto">
                         <label className="text-sm font-medium">🎨 Max Colors:</label>
-                        <Select value={maxColors.toString()} onValueChange={(val) => {
-                            const newMax = parseInt(val);
-                            setMaxColors(newMax);
-                            setColors(Array(nodes.length).fill(-1));
-                            setSteps([]);
-                            setStepIndex(0);
-                            setIsPlaying(false);
-                        }}>
+                        <Select
+                            value={maxColors.toString()}
+                            onValueChange={(val) => {
+                                const newMax = parseInt(val);
+                                setMaxColors(newMax);
+                                setColors(Array(nodes.length).fill(-1));
+                                setSteps([]);
+                                setStepIndex(0);
+                                setIsPlaying(false);
+                            }}
+                        >
                             <SelectTrigger className="w-[80px]">
                                 <SelectValue placeholder="Colors" />
                             </SelectTrigger>
                             <SelectContent>
                                 {[...Array(6)].map((_, i) => (
-                                    <SelectItem key={i} value={(i + 1).toString()}>{i + 1}</SelectItem>
+                                    <SelectItem key={i} value={(i + 1).toString()}>
+                                        {i + 1}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -241,12 +278,14 @@ export default function VisualizeBacktrackingGraphColoring() {
                 </CardContent>
             </Card>
 
+            {/* Message Card */}
             <Card className="bg-gradient-to-b from-[#1e1e1e] to-[#2a2a2a]">
-                <CardContent className=" text-white text-center">
+                <CardContent className="text-white text-center">
                     {message || "💡 Click to add nodes. Click two nodes to connect. Shift+Click to delete. Drag to reposition."}
                 </CardContent>
             </Card>
 
+            {/* SVG Container */}
             <div className="border border-gray-500 rounded-lg overflow-hidden">
                 <svg
                     ref={svgRef}
@@ -255,16 +294,17 @@ export default function VisualizeBacktrackingGraphColoring() {
                     className="bg-neutral-900 w-full"
                     onClick={handleSvgClick}
                 >
+                    {/* Render edges and nodes */}
                     {edges.map((edge, i) => {
                         const from = nodes[edge.from];
                         const to = nodes[edge.to];
                         return (
                             <line
                                 key={i}
-                                x1={from.x}
-                                y1={from.y}
-                                x2={to.x}
-                                y2={to.y}
+                                x1={from?.x}
+                                y1={from?.y}
+                                x2={to?.x}
+                                y2={to?.y}
                                 stroke="#aaa"
                                 strokeWidth="2"
                             />
@@ -323,7 +363,8 @@ export default function VisualizeBacktrackingGraphColoring() {
                 </svg>
             </div>
 
-            <div className="flex flex-wrap gap-2 items-center">
+            {/* Color Badges */}
+            <div className="flex flex-wrap gap-2 items-center justify-center sm:justify-start">
                 <span className="text-sm font-medium text-white">Available Colors:</span>
                 {colorPalette.map((color, i) => (
                     <Badge key={i} className="rounded-full" style={{ backgroundColor: color }}>

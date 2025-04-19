@@ -18,7 +18,7 @@ export default function Home() {
 
         <CardContent>
           <Tabs defaultValue="explanation" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 	bg-gradient-to-r from-[#2c2f33] via-[#3a3f44] to-[#2c2f33] rounded-md text-muted-foreground py-1 px-2">
+            <TabsList className="w-full flex flex-col md:grid md:grid-cols-3 bg-gradient-to-r from-[#2c2f33] via-[#3a3f44] to-[#2c2f33] rounded-md text-muted-foreground py-1 px-2 gap-2">
               <TabsTrigger value="explanation" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-colors p-3">Explanation</TabsTrigger>
               <TabsTrigger value="code" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white rounded-md transition-colors p-3">Code</TabsTrigger>
               <TabsTrigger value="simulation" className="hover:cursor-pointer data-[state=active]:bg-black data-[state=active]:text-white transition-colors rounded-md p-3">Simulation</TabsTrigger>
